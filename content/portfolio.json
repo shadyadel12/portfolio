@@ -22,7 +22,28 @@
     "academy_url": "",
     "cv_filename": "cv.pdf"
   },
-  "projects": [],
+  "projects": [
+    {
+      "id": 1,
+      "track": "fullstack",
+      "code": "./dev-01",
+      "title": "LandGym — Gym Management System",
+      "description": "Windows desktop app for gyms: member signup with barcode ID scanner, subscription offers, Excel import/export, salted+hashed owner/admin auth, and Supabase-backed lifetime licensing bound to the machine.",
+      "tags": "Python, Tkinter, SQLite, Supabase",
+      "url": "",
+      "sort_order": 1
+    },
+    {
+      "id": 2,
+      "track": "fullstack",
+      "code": "./dev-02",
+      "title": "Trainova ECC — AI Agent Control Panel",
+      "description": "Zero-dependency Node.js control panel to run and supervise AI (Codex) coding sessions across projects — per-project access levels, sandboxed inspect/build modes, Local QA automation, and auto-generated technical & non-technical reports.",
+      "tags": "Node.js, JavaScript, AI Agents, Automation",
+      "url": "",
+      "sort_order": 2
+    }
+  ],
   "certs": [
     {
       "id": 1,
