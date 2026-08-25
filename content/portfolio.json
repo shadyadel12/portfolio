@@ -28,8 +28,8 @@
       "track": "fullstack",
       "code": "./dev-01",
       "title": "Trainova — Coaching Platform",
-      "description": "Personal coaching platform for athletes, coaches, and companies. Coaches build training & nutrition plans, run check-ins, track progress, and message players across web and mobile. Role-based access, bilingual (EN/AR, RTL), a Supabase backend, and a Cloudflare request-gateway with row-level security.",
-      "tags": "React, TypeScript, React Native, Supabase, Cloudflare",
+      "description": "Personal coaching platform for athletes, coaches, and companies. Coaches build training & nutrition plans, run check-ins, track progress, and message players across web and mobile. Role-based access and bilingual (EN/AR, RTL).",
+      "tags": "React, TypeScript, React Native",
       "url": "https://trainov.org",
       "sort_order": 1
     },
@@ -38,8 +38,8 @@
       "track": "fullstack",
       "code": "./dev-02",
       "title": "LandGym — Gym Management System",
-      "description": "Windows desktop app for gyms: member signup with barcode ID scanner, subscription offers, Excel import/export, salted+hashed owner/admin auth, and Supabase-backed lifetime licensing bound to the machine.",
-      "tags": "Python, Tkinter, SQLite, Supabase",
+      "description": "Windows desktop app for gyms: member signup with barcode ID scanner, subscription offers, Excel import/export, salted+hashed owner/admin auth, and machine-bound lifetime licensing.",
+      "tags": "Python, Tkinter",
       "url": "",
       "sort_order": 2
     }
