@@ -24,22 +24,22 @@
   },
   "projects": [
     {
-      "id": 1,
+      "id": 2,
       "track": "fullstack",
       "code": "./dev-01",
-      "title": "LandGym — Gym Management System",
-      "description": "Windows desktop app for gyms: member signup with barcode ID scanner, subscription offers, Excel import/export, salted+hashed owner/admin auth, and Supabase-backed lifetime licensing bound to the machine.",
-      "tags": "Python, Tkinter, SQLite, Supabase",
-      "url": "",
+      "title": "Trainova — Coaching Platform",
+      "description": "Personal coaching platform for athletes, coaches, and companies. Coaches build training & nutrition plans, run check-ins, track progress, and message players across web and mobile. Role-based access, bilingual (EN/AR, RTL), a Supabase backend, and a Cloudflare request-gateway with row-level security.",
+      "tags": "React, TypeScript, React Native, Supabase, Cloudflare",
+      "url": "https://trainov.org",
       "sort_order": 1
     },
     {
-      "id": 2,
+      "id": 1,
       "track": "fullstack",
       "code": "./dev-02",
-      "title": "Trainova ECC — AI Agent Control Panel",
-      "description": "Zero-dependency Node.js control panel to run and supervise AI (Codex) coding sessions across projects — per-project access levels, sandboxed inspect/build modes, Local QA automation, and auto-generated technical & non-technical reports.",
-      "tags": "Node.js, JavaScript, AI Agents, Automation",
+      "title": "LandGym — Gym Management System",
+      "description": "Windows desktop app for gyms: member signup with barcode ID scanner, subscription offers, Excel import/export, salted+hashed owner/admin auth, and Supabase-backed lifetime licensing bound to the machine.",
+      "tags": "Python, Tkinter, SQLite, Supabase",
       "url": "",
       "sort_order": 2
     }
