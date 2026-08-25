@@ -1,0 +1,6 @@
+node_modules/
+.env
+*.log
+
+# content/portfolio.json and uploads/ (your CV) ARE tracked on purpose —
+# your content + CV ship with the site when you deploy.

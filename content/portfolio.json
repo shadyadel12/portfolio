@@ -1,0 +1,127 @@
+{
+  "settings": {
+    "brand": "shady-adel",
+    "name": "Shady Adel",
+    "role": "Cybersecurity Pentest & Web Developer",
+    "hero_intro": "Computer Science undergraduate at Future University in Egypt, focused on cybersecurity and web development — with a solid programming foundation and a habit of building things and studying how they break.",
+    "hero_skills": "Python, Java, C++, Linux",
+    "about": "Motivated and detail-oriented Computer Science undergraduate with a strong foundation in programming, cybersecurity, and problem-solving. Skilled in communication and teamwork, with hands-on experience in customer service and technical support. Passionate about technology, continuous learning, and building innovative, secure solutions.",
+    "email": "adelshady226@gmail.com",
+    "github_url": "https://github.com/shadyadel12",
+    "linkedin_url": "https://www.linkedin.com/in/shady-adel-085a57328/",
+    "sec_intro": "My cybersecurity focus: pentesting, network and Linux security, and the fundamentals behind attacking and defending systems. Certified in CEH and CompTIA CySA+.",
+    "sec_tags": "Pentesting, Cybersecurity Fundamentals, Linux, Networking, CEH, CySA+, Problem Solving",
+    "dev_intro": "Application and web development on a computer-science foundation — building solutions with Python, Java, and C++ and object-oriented design.",
+    "dev_tags": "Python, Java, C++, OOP, Problem Solving, Git",
+    "other_intro": "Roles and work outside cybersecurity and development.",
+    "htb_intro": "Live from my Hack The Box profile — rank, points, and the machines I have owned.",
+    "academy_intro": "My structured learning on HTB Academy — modules, tier, and certifications.",
+    "academy_tier": "",
+    "academy_modules": "",
+    "academy_cubes": "",
+    "academy_url": "",
+    "cv_filename": "cv.pdf"
+  },
+  "projects": [],
+  "certs": [
+    {
+      "id": 1,
+      "track": "security",
+      "title": "CompTIA CySA+ (Cybersecurity Analyst)",
+      "credential": "Certificate of Completion",
+      "year": "",
+      "sort_order": 1
+    },
+    {
+      "id": 2,
+      "track": "security",
+      "title": "Cyber Security Fundamentals (CEH)",
+      "credential": "Certificate",
+      "year": "",
+      "sort_order": 2
+    },
+    {
+      "id": 3,
+      "track": "security",
+      "title": "Problem Solving — Level 1 & Level 2",
+      "credential": "Certificate",
+      "year": "",
+      "sort_order": 3
+    },
+    {
+      "id": 4,
+      "track": "fullstack",
+      "title": "C++ Basics & OOP Certified Course",
+      "credential": "Instant Group",
+      "year": "",
+      "sort_order": 1
+    },
+    {
+      "id": 5,
+      "track": "fullstack",
+      "title": "C++ Basics Course",
+      "credential": "Eraa Soft",
+      "year": "",
+      "sort_order": 2
+    },
+    {
+      "id": 6,
+      "track": "fullstack",
+      "title": "Microsoft Office Course",
+      "credential": "Certificate",
+      "year": "",
+      "sort_order": 3
+    }
+  ],
+  "experience": [
+    {
+      "id": 1,
+      "track": "security",
+      "role": "Computer Science Undergraduate — Cybersecurity",
+      "org": "Future University in Egypt",
+      "description": "Studying Computers & Information Technology with a focus on cybersecurity, Linux, and networking. Current GPA 3.07.",
+      "period": "2023 — 2027",
+      "sort_order": 1
+    },
+    {
+      "id": 2,
+      "track": "other",
+      "role": "Customer Service & Sales Representative",
+      "org": "Teleperformance",
+      "description": "7 months across two accounts, including a US-based Customer Service & Sales account — resolving inquiries and technical issues, meeting performance targets, and handling upselling and negotiation.",
+      "period": "7 months",
+      "sort_order": 1
+    }
+  ],
+  "paths": [
+    {
+      "id": 1,
+      "name": "Junior Cybersecurity Analyst",
+      "tag": "Job Role Path",
+      "difficulty": "Easy",
+      "modules_total": "20",
+      "hours": "17d 3h",
+      "progress": 12.9,
+      "url": "https://academy.hackthebox.com/app/paths/419/details",
+      "sort_order": 0
+    }
+  ],
+  "path_modules": [
+    {
+      "id": 1,
+      "path_id": 1,
+      "name": "Introduction to Information Security",
+      "status": "Completed",
+      "progress": 100,
+      "sort_order": 1
+    },
+    {
+      "id": 2,
+      "path_id": 1,
+      "name": "Network Foundations",
+      "status": "In progress",
+      "progress": 35,
+      "sort_order": 2
+    }
+  ]
+}

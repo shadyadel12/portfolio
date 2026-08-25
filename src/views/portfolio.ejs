@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= s.name %> — Portfolio</title>
+<meta name="description" content="<%= s.role %>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/styles.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="wrap">
+    <div class="row">
+      <span style="font-weight:700; color:#eef3f7;"><span class="prompt">~/</span><%= s.brand %></span>
+      <span class="navlinks">
+        <a href="#about">about</a>
+        <a href="#security">cybersecurity</a>
+        <a href="#fullstack">full-stack</a>
+        <% if (htb && htb.configured) { %><a href="#htb">htb</a><% } %>
+        <% if (academyPaths.length || academyCerts.length || s.academy_tier || s.academy_modules || s.academy_cubes) { %><a href="#academy">academy</a><% } %>
+        <% if (otherExperience.length) { %><a href="#other">other</a><% } %>
+        <a href="#contact">contact</a>
+        <% if (hasCv) { %><a href="/cv" class="btn cvbtn">cv</a><% } %>
+      </span>
+    </div>
+  </div>
+</nav>
+
+<header class="wrap" style="padding:clamp(60px,10vw,120px) 0 clamp(40px,6vw,72px);">
+  <p class="kick" style="margin:0 0 22px;"><span class="prompt">$</span> whoami</p>
+  <h1 class="h1"><%= s.name %><span class="cursor"></span></h1>
+  <p style="font-size:clamp(16px,2.4vw,21px); color:var(--green); margin:18px 0 0; font-weight:600;"><%= s.role %></p>
+  <p style="font-size:16px; color:var(--muted); max-width:62ch; margin:20px 0 0;"><%= s.hero_intro %></p>
+  <div style="display:flex; gap:12px; flex-wrap:wrap; margin-top:34px;">
+    <% if (hasCv) { %><a href="/cv" class="btn btn-solid">Download CV</a><% } %>
+    <a href="#security" class="btn btn-ghost">Explore work</a>
+  </div>
+  <% if (heroSkills.length) { %>
+  <div style="display:flex; gap:22px; flex-wrap:wrap; margin-top:30px; color:var(--muted); font-size:13.5px;">
+    <% heroSkills.forEach(function(k){ %><span><span class="prompt">▸</span> <%= k %></span><% }); %>
+  </div>
+  <% } %>
+</header>
+
+<% var __n = 0; var sn = function(){ return String(__n++).padStart(2, '0'); }; %>
+<section class="sec" id="about">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= sn() %></span><h2 class="h2">// about</h2></div>
+    <p style="font-size:16px; color:var(--txt); max-width:66ch; margin:22px 0 0;"><%= s.about %></p>
+  </div>
+</section>
+
+<%
+  function track(view, meta) {
+%>
+<section class="sec" id="<%= meta.id %>">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= meta.no %></span><h2 class="h2">// <%= meta.title %></h2></div>
+    <p class="track-intro"><%= meta.intro %></p>
+    <% if (meta.tags.length) { %>
+    <div style="display:flex; gap:8px; flex-wrap:wrap;">
+      <% meta.tags.forEach(function(t){ %><span class="tag"><%= t %></span><% }); %>
+    </div>
+    <% } %>
+
+    <% if (view.projects.length) { %>
+    <div class="block">
+      <p class="subhead">// projects</p>
+      <div class="grid-proj">
+        <% view.projects.forEach(function(p){ %>
+          <% var isLink = !!p.url; var Tag = isLink ? 'a' : 'div'; %>
+          <<%= Tag %> class="card" <% if (isLink) { %>href="<%= p.url %>" target="_blank" rel="noopener"<% } %> style="padding:24px; display:block; color:inherit;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;"><span class="prompt" style="font-size:13px;"><%= p.code %></span><span style="color:var(--muted);">↗</span></div>
+            <p style="font-weight:700; color:#eef3f7; font-size:19px; margin:0 0 10px;"><%= p.title %></p>
+            <p style="color:var(--muted); font-size:14px; margin:0 0 16px;"><%= p.description %></p>
+            <% if (p.tagList.length) { %>
+            <div style="display:flex; gap:8px; flex-wrap:wrap;"><% p.tagList.forEach(function(t){ %><span class="tag"><%= t %></span><% }); %></div>
+            <% } %>
+          </<%= Tag %>>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
+    <% if (view.certs.length) { %>
+    <div class="block">
+      <p class="subhead">// certifications</p>
+      <div class="stack">
+        <% view.certs.forEach(function(c){ %>
+        <div class="certrow"><div><p style="margin:0; color:#eef3f7; font-weight:600;"><%= c.title %></p><p style="margin:4px 0 0; color:var(--muted); font-size:13px;"><%= c.credential %></p></div><span style="color:var(--green); font-size:13px;"><%= c.year %></span></div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+
+    <% if (view.experience.length) { %>
+    <div class="block">
+      <p class="subhead">// experience</p>
+      <div class="stack">
+        <% view.experience.forEach(function(e){ %>
+        <div class="exprow"><div><p style="margin:0; color:#eef3f7; font-weight:600;"><%= e.role %></p><p style="margin:4px 0 8px; color:var(--green); font-size:13.5px;"><%= e.org %></p><p style="margin:0; color:var(--muted); font-size:14px;"><%= e.description %></p></div><span style="color:var(--muted); font-size:13px; white-space:nowrap;"><%= e.period %></span></div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<%- track(security, { id:'security', no: sn(), title:'cybersecurity', intro:s.sec_intro, tags:secTags }) %>
+<%- track(fullstack, { id:'fullstack', no: sn(), title:'full-stack', intro:s.dev_intro, tags:devTags }) %>
+
+<% if (htb && htb.configured) { %>
+<section class="sec" id="htb">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= sn() %></span><h2 class="h2">// hack the box</h2></div>
+    <% if (s.htb_intro) { %><p class="track-intro"><%= s.htb_intro %></p><% } %>
+    <% if (htb.ok) { %>
+      <div class="htb-stats">
+        <div class="card htb-stat"><span class="k">rank</span><span class="v"><%= htb.profile.rank || '—' %></span></div>
+        <div class="card htb-stat"><span class="k">global rank</span><span class="v"><%= htb.profile.ranking ? '#' + htb.profile.ranking : '—' %></span></div>
+        <div class="card htb-stat"><span class="k">points</span><span class="v"><%= htb.profile.points != null ? htb.profile.points : '—' %></span></div>
+        <div class="card htb-stat"><span class="k">user owns</span><span class="v"><%= htb.profile.userOwns != null ? htb.profile.userOwns : '—' %></span></div>
+        <div class="card htb-stat"><span class="k">system owns</span><span class="v"><%= htb.profile.systemOwns != null ? htb.profile.systemOwns : '—' %></span></div>
+        <div class="card htb-stat"><span class="k">respects</span><span class="v"><%= htb.profile.respects != null ? htb.profile.respects : '—' %></span></div>
+      </div>
+      <% if (htb.profile.rankProgress != null && htb.profile.nextRank) { %>
+      <div class="htb-progress">
+        <div class="htb-progress-head"><span>rank progress → <%= htb.profile.nextRank %></span><span class="prompt"><%= htb.profile.rankProgress %>%</span></div>
+        <div class="htb-bar"><span style="width:<%= htb.profile.rankProgress %>%;"></span></div>
+      </div>
+      <% } %>
+      <% if (htb.machines && htb.machines.length) { %>
+      <div class="block">
+        <p class="subhead">// machines owned</p>
+        <div class="stack">
+          <% htb.machines.forEach(function(m){ %>
+          <div class="certrow"><div><p style="margin:0; color:#eef3f7; font-weight:600;"><%= m.name || 'Machine' %></p><p style="margin:4px 0 0; color:var(--muted); font-size:13px;"><%= m.os || '' %><% if (m.difficulty) { %> · <%= m.difficulty %><% } %></p></div><% if (m.points != null) { %><span style="color:var(--green); font-size:13px; white-space:nowrap;"><%= m.points %> pts</span><% } %></div>
+          <% }); %>
+        </div>
+      </div>
+      <% } %>
+      <div style="margin-top:26px;"><a href="<%= htb.profileUrl %>" target="_blank" rel="noopener" class="btn btn-ghost">View HTB profile ↗</a></div>
+    <% } else { %>
+      <p style="color:var(--muted); margin-top:18px;">Live HTB stats are temporarily unavailable. <a href="<%= htb.profileUrl %>" target="_blank" rel="noopener">View profile ↗</a></p>
+    <% } %>
+  </div>
+</section>
+<% } %>
+
+<% var academyShown = (academyPaths.length || academyCerts.length || s.academy_tier || s.academy_modules || s.academy_cubes); %>
+<% if (academyShown) { %>
+<section class="sec" id="academy">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= sn() %></span><h2 class="h2">// htb academy</h2></div>
+    <% if (s.academy_intro) { %><p class="track-intro"><%= s.academy_intro %></p><% } %>
+    <% if (s.academy_tier || s.academy_modules || s.academy_cubes) { %>
+    <div class="htb-stats">
+      <% if (s.academy_tier) { %><div class="card htb-stat"><span class="k">tier</span><span class="v"><%= s.academy_tier %></span></div><% } %>
+      <% if (s.academy_modules) { %><div class="card htb-stat"><span class="k">modules completed</span><span class="v"><%= s.academy_modules %></span></div><% } %>
+      <% if (s.academy_cubes) { %><div class="card htb-stat"><span class="k">cubes</span><span class="v"><%= s.academy_cubes %></span></div><% } %>
+    </div>
+    <% } %>
+    <% if (academyPaths.length) { %>
+    <div class="block">
+      <p class="subhead">// learning paths</p>
+      <% academyPaths.forEach(function(p){ %>
+      <div class="card path">
+        <div class="path-head">
+          <p class="path-name"><%= p.name %></p>
+          <div class="path-meta">
+            <% if (p.tag) { %><span class="tag"><%= p.tag %></span><% } %>
+            <% if (p.difficulty) { %><span><span class="prompt">▸</span> <%= p.difficulty %></span><% } %>
+            <% if (p.modules_total) { %><span><span class="prompt">▸</span> <%= p.modules_total %> modules</span><% } %>
+            <% if (p.hours) { %><span><span class="prompt">▸</span> <%= p.hours %></span><% } %>
+          </div>
+        </div>
+        <div class="htb-progress">
+          <div class="htb-progress-head"><span>path progress</span><span class="prompt"><%= p.progress %>%</span></div>
+          <div class="htb-bar"><span style="width:<%= p.progress %>%;"></span></div>
+        </div>
+        <% if (p.modules.length) { %>
+        <div class="path-modules">
+          <% p.modules.forEach(function(m){ %>
+          <div class="pm">
+            <div class="pm-head"><span><%= m.name %><% if (m.status) { %> <span style="color:var(--muted);">· <%= m.status %></span><% } %></span><span class="prompt"><%= m.progress %>%</span></div>
+            <div class="htb-bar"><span style="width:<%= m.progress %>%;"></span></div>
+          </div>
+          <% }); %>
+        </div>
+        <% } %>
+        <% if (p.url) { %><div style="margin-top:16px;"><a href="<%= p.url %>" target="_blank" rel="noopener" style="font-size:13px;">Open path ↗</a></div><% } %>
+      </div>
+      <% }); %>
+    </div>
+    <% } %>
+    <% if (academyCerts.length) { %>
+    <div class="block">
+      <p class="subhead">// certifications</p>
+      <div class="stack">
+        <% academyCerts.forEach(function(c){ %>
+        <div class="certrow"><div><p style="margin:0; color:#eef3f7; font-weight:600;"><%= c.title %></p><% if (c.credential) { %><p style="margin:4px 0 0; color:var(--muted); font-size:13px;"><%= c.credential %></p><% } %></div><% if (c.year) { %><span style="color:var(--green); font-size:13px;"><%= c.year %></span><% } %></div>
+        <% }); %>
+      </div>
+    </div>
+    <% } %>
+    <% if (s.academy_url) { %><div style="margin-top:26px;"><a href="<%= s.academy_url %>" target="_blank" rel="noopener" class="btn btn-ghost">View Academy profile ↗</a></div><% } %>
+  </div>
+</section>
+<% } %>
+
+<% if (otherExperience.length) { %>
+<section class="sec" id="other">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= sn() %></span><h2 class="h2">// other experience</h2></div>
+    <% if (s.other_intro) { %><p class="track-intro"><%= s.other_intro %></p><% } %>
+    <div class="block" style="margin-top:<%= s.other_intro ? '0' : '28px' %>;">
+      <div class="stack">
+        <% otherExperience.forEach(function(e){ %>
+        <div class="exprow"><div><p style="margin:0; color:#eef3f7; font-weight:600;"><%= e.role %></p><p style="margin:4px 0 8px; color:var(--green); font-size:13.5px;"><%= e.org %></p><p style="margin:0; color:var(--muted); font-size:14px;"><%= e.description %></p></div><span style="color:var(--muted); font-size:13px; white-space:nowrap;"><%= e.period %></span></div>
+        <% }); %>
+      </div>
+    </div>
+  </div>
+</section>
+<% } %>
+
+<section class="sec" id="contact">
+  <div class="wrap">
+    <div class="sechead"><span class="no"><%= sn() %></span><h2 class="h2">// contact</h2></div>
+    <p class="kick" style="margin:22px 0 10px;"><span class="prompt">$</span> ./contact --me</p>
+    <p style="font-size:clamp(20px,3vw,30px); color:#eef3f7; font-weight:700; margin:0 0 26px;">Let's build something<span class="cursor"></span></p>
+    <div style="display:flex; gap:24px; flex-wrap:wrap; margin-bottom:34px;">
+      <a href="mailto:<%= s.email %>"><%= s.email %></a>
+      <% if (s.github_url) { %><a href="<%= s.github_url %>" target="_blank" rel="noopener">GitHub</a><% } %>
+      <% if (s.linkedin_url) { %><a href="<%= s.linkedin_url %>" target="_blank" rel="noopener">LinkedIn</a><% } %>
+    </div>
+    <% if (hasCv) { %><a href="/cv" class="btn btn-solid">Download CV</a><% } %>
+  </div>
+</section>
+
+<footer class="wrap" style="padding:30px 0; border-top:1px solid var(--line); color:var(--muted); font-size:13px;">
+  <span class="prompt">$</span> echo "© <%= year %> <%= s.name %>"<% if (adminEnabled) { %> &nbsp;·&nbsp; <a href="/admin" style="color:var(--dim);">admin</a><% } %>
+</footer>
+
+</body>
+</html>

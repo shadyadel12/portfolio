@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Admin — Portfolio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/css/admin.css">
+</head>
+<body>
+
+<%
+  // helper: render a track <select>. Pass a list of allowed tracks (defaults to the two main ones).
+  var TRACK_LABELS = { security:'security', fullstack:'full-stack', other:'other', academy:'academy' };
+  function trackSelect(current, tracks){
+    tracks = tracks || ['security','fullstack'];
+    var opts = tracks.map(function(t){
+      var sel = current === t ? 'selected' : '';
+      return '<option value="'+t+'" '+sel+'>'+TRACK_LABELS[t]+'</option>';
+    }).join('');
+    return '<select name="track">'+opts+'</select>';
+  }
+  function trackHeading(tk){
+    if (tk === 'security') return 'cybersecurity';
+    if (tk === 'other') return 'other experience';
+    if (tk === 'academy') return 'htb academy';
+    return 'full-stack';
+  }
+%>
+
+<div class="topbar">
+  <div class="wrap">
+    <div class="row">
+      <span class="brand"><span class="prompt">~/</span>admin</span>
+      <span class="topnav">
+        <a href="#content">content</a>
+        <a href="#cv">cv</a>
+        <a href="#projects">projects</a>
+        <a href="#certs">certs</a>
+        <a href="#experience">experience</a>
+        <a href="#paths">paths</a>
+        <a href="#htb">htb</a>
+        <a href="/" target="_blank">view site ↗</a>
+      </span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <% if (msg) { %><div class="flash <%= msgType === 'err' ? 'err' : '' %>"><%= msg %></div><% } %>
+
+  <!-- ============ CONTENT ============ -->
+  <section class="sec" id="content">
+    <h1>Site content</h1>
+    <p class="sec-desc">Text shown across the portfolio. Comma-separate tag/skill lists.</p>
+    <form method="post" action="/admin/settings">
+      <div class="card">
+        <div class="grid2">
+          <div class="field"><label>Nav brand (after ~/)</label><input name="brand" value="<%= s.brand %>"></div>
+          <div class="field"><label>Name</label><input name="name" value="<%= s.name %>"></div>
+        </div>
+        <div class="field"><label>Role / tagline</label><input name="role" value="<%= s.role %>"></div>
+        <div class="field"><label>Hero intro</label><textarea name="hero_intro"><%= s.hero_intro %></textarea></div>
+        <div class="field"><label>Hero skills (comma separated)</label><input name="hero_skills" value="<%= s.hero_skills %>"></div>
+        <div class="field"><label>About paragraph</label><textarea name="about"><%= s.about %></textarea></div>
+      </div>
+      <div class="card">
+        <div class="grid2">
+          <div class="field"><label>Email</label><input name="email" value="<%= s.email %>"></div>
+          <div class="field"><label>GitHub URL</label><input name="github_url" value="<%= s.github_url %>" placeholder="https://github.com/you"></div>
+        </div>
+        <div class="field"><label>LinkedIn URL</label><input name="linkedin_url" value="<%= s.linkedin_url %>" placeholder="https://linkedin.com/in/you"></div>
+      </div>
+      <div class="card">
+        <div class="field"><label>Cybersecurity — section intro</label><textarea name="sec_intro"><%= s.sec_intro %></textarea></div>
+        <div class="field"><label>Cybersecurity — tags (comma separated)</label><input name="sec_tags" value="<%= s.sec_tags %>"></div>
+        <hr class="div">
+        <div class="field"><label>Full-stack — section intro</label><textarea name="dev_intro"><%= s.dev_intro %></textarea></div>
+        <div class="field"><label>Full-stack — tags (comma separated)</label><input name="dev_tags" value="<%= s.dev_tags %>"></div>
+        <hr class="div">
+        <div class="field"><label>Other experience — section intro</label><textarea name="other_intro"><%= s.other_intro %></textarea></div>
+        <hr class="div">
+        <div class="field"><label>Hack The Box — section intro</label><textarea name="htb_intro"><%= s.htb_intro %></textarea></div>
+        <hr class="div">
+        <div class="field"><label>HTB Academy — section intro</label><textarea name="academy_intro"><%= s.academy_intro %></textarea></div>
+        <div class="grid3">
+          <div class="field"><label>Academy tier</label><input name="academy_tier" value="<%= s.academy_tier %>" placeholder="e.g. Tier II"></div>
+          <div class="field"><label>Modules completed</label><input name="academy_modules" value="<%= s.academy_modules %>" placeholder="e.g. 24"></div>
+          <div class="field"><label>Cubes</label><input name="academy_cubes" value="<%= s.academy_cubes %>" placeholder="e.g. 350"></div>
+        </div>
+        <div class="field"><label>Academy profile URL (optional)</label><input name="academy_url" value="<%= s.academy_url %>" placeholder="https://academy.hackthebox.com/..."></div>
+        <p class="muted" style="font-size:12px; margin:0;">Add Academy certifications (CPTS, CBBH, ...) below under <a href="#certs">certs</a> → the "htb academy" group. Leave the stat fields blank to hide them.</p>
+      </div>
+      <button class="btn btn-solid">Save content</button>
+    </form>
+  </section>
+
+  <!-- ============ CV ============ -->
+  <section class="sec" id="cv">
+    <h1>CV / Résumé</h1>
+    <p class="sec-desc">Upload a PDF (max 10 MB). The "Download CV" buttons appear on the site only when a CV is present.</p>
+    <div class="card">
+      <p class="muted" style="margin-top:0;">
+        Status:
+        <% if (hasCv) { %><span style="color:var(--green);">uploaded</span> — <a href="/cv" target="_blank">view current CV ↗</a><% } else { %><span style="color:var(--muted);">no CV uploaded</span><% } %>
+      </p>
+      <form method="post" action="/admin/cv" enctype="multipart/form-data">
+        <div class="field"><label>PDF file</label><input type="file" name="cv" accept="application/pdf,.pdf" required></div>
+        <div class="actions">
+          <button class="btn btn-solid"><%= hasCv ? 'Replace CV' : 'Upload CV' %></button>
+          <% if (hasCv) { %>
+          <button class="btn btn-danger" formaction="/admin/cv/delete" formmethod="post" formenctype="application/x-www-form-urlencoded">Remove CV</button>
+          <% } %>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ PROJECTS ============ -->
+  <section class="sec" id="projects">
+    <h1>Projects</h1>
+    <p class="sec-desc">Each project is a card in its track. Lower "order" numbers appear first. Add a URL to make the card clickable.</p>
+    <% ['security','fullstack'].forEach(function(tk){ %>
+      <h2>// <%= tk === 'security' ? 'cybersecurity' : 'full-stack' %></h2>
+      <% data[tk].projects.forEach(function(p){ %>
+        <form method="post" action="/admin/projects/<%= p.id %>" class="item">
+          <div class="item-head"><span class="code"><%= p.code || '—' %></span><span class="pill">#<%= p.id %></span></div>
+          <div class="grid2">
+            <div class="field"><label>Code label</label><input name="code" value="<%= p.code %>" placeholder="./sec-01"></div>
+            <div class="field"><label>Title</label><input name="title" value="<%= p.title %>"></div>
+          </div>
+          <div class="field"><label>Description</label><textarea name="description"><%= p.description %></textarea></div>
+          <div class="grid2">
+            <div class="field"><label>Tags (comma separated)</label><input name="tags" value="<%= p.tags %>"></div>
+            <div class="field"><label>URL (optional)</label><input name="url" value="<%= p.url %>" placeholder="https://..."></div>
+          </div>
+          <div class="grid3">
+            <div class="field"><label>Track</label><%- trackSelect(p.track) %></div>
+            <div class="field"><label>Order</label><input type="number" name="sort_order" value="<%= p.sort_order %>"></div>
+            <div class="actions">
+              <button class="btn btn-solid">Save</button>
+              <button class="btn btn-danger" formaction="/admin/projects/<%= p.id %>/delete" onclick="return confirm('Delete this project?')">Delete</button>
+            </div>
+          </div>
+        </form>
+      <% }); %>
+    <% }); %>
+
+    <div class="card" style="border-style:dashed;">
+      <h2 style="color:var(--green-bright);">+ Add project</h2>
+      <form method="post" action="/admin/projects">
+        <div class="grid2">
+          <div class="field"><label>Code label</label><input name="code" placeholder="./sec-03"></div>
+          <div class="field"><label>Title</label><input name="title" required></div>
+        </div>
+        <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+        <div class="grid2">
+          <div class="field"><label>Tags (comma separated)</label><input name="tags"></div>
+          <div class="field"><label>URL (optional)</label><input name="url" placeholder="https://..."></div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>Track</label><%- trackSelect('security') %></div>
+          <div class="field"><label>Order</label><input type="number" name="sort_order" value="0"></div>
+          <div class="actions"><button class="btn btn-solid">Add project</button></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ CERTS ============ -->
+  <section class="sec" id="certs">
+    <h1>Certifications</h1>
+    <p class="sec-desc">Listed under each track.</p>
+    <% ['security','fullstack','academy'].forEach(function(tk){ %>
+      <h2>// <%= trackHeading(tk) %></h2>
+      <% data[tk].certs.forEach(function(c){ %>
+        <form method="post" action="/admin/certs/<%= c.id %>" class="item">
+          <div class="item-head"><span class="code"><%= c.title || '—' %></span><span class="pill">#<%= c.id %></span></div>
+          <div class="field"><label>Title</label><input name="title" value="<%= c.title %>"></div>
+          <div class="grid2">
+            <div class="field"><label>Credential ID / issuer / status</label><input name="credential" value="<%= c.credential %>"></div>
+            <div class="field"><label>Year</label><input name="year" value="<%= c.year %>"></div>
+          </div>
+          <div class="grid3">
+            <div class="field"><label>Track</label><%- trackSelect(c.track, ['security','fullstack','academy']) %></div>
+            <div class="field"><label>Order</label><input type="number" name="sort_order" value="<%= c.sort_order %>"></div>
+            <div class="actions">
+              <button class="btn btn-solid">Save</button>
+              <button class="btn btn-danger" formaction="/admin/certs/<%= c.id %>/delete" onclick="return confirm('Delete this certification?')">Delete</button>
+            </div>
+          </div>
+        </form>
+      <% }); %>
+    <% }); %>
+
+    <div class="card" style="border-style:dashed;">
+      <h2 style="color:var(--green-bright);">+ Add certification</h2>
+      <form method="post" action="/admin/certs">
+        <div class="field"><label>Title</label><input name="title" required></div>
+        <div class="grid2">
+          <div class="field"><label>Credential ID / issuer</label><input name="credential"></div>
+          <div class="field"><label>Year</label><input name="year"></div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>Track</label><%- trackSelect('security', ['security','fullstack','academy']) %></div>
+          <div class="field"><label>Order</label><input type="number" name="sort_order" value="0"></div>
+          <div class="actions"><button class="btn btn-solid">Add certification</button></div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ EXPERIENCE ============ -->
+  <section class="sec" id="experience">
+    <h1>Experience</h1>
+    <p class="sec-desc">Roles and activities, listed under each track.</p>
+    <% ['security','fullstack','other'].forEach(function(tk){ %>
+      <h2>// <%= trackHeading(tk) %></h2>
+      <% data[tk].experience.forEach(function(e){ %>
+        <form method="post" action="/admin/experience/<%= e.id %>" class="item">
+          <div class="item-head"><span class="code"><%= e.role || '—' %></span><span class="pill">#<%= e.id %></span></div>
+          <div class="grid2">
+            <div class="field"><label>Role</label><input name="role" value="<%= e.role %>"></div>
+            <div class="field"><label>Organisation</label><input name="org" value="<%= e.org %>"></div>
+          </div>
+          <div class="field"><label>Description</label><textarea name="description"><%= e.description %></textarea></div>
+          <div class="grid3">
+            <div class="field"><label>Period</label><input name="period" value="<%= e.period %>" placeholder="2024 — now"></div>
+            <div class="field"><label>Track</label><%- trackSelect(e.track, ['security','fullstack','other']) %></div>
+            <div class="actions">
+              <input type="number" name="sort_order" value="<%= e.sort_order %>" title="Order" style="width:70px;">
+              <button class="btn btn-solid">Save</button>
+              <button class="btn btn-danger" formaction="/admin/experience/<%= e.id %>/delete" onclick="return confirm('Delete this experience?')">Delete</button>
+            </div>
+          </div>
+        </form>
+      <% }); %>
+    <% }); %>
+
+    <div class="card" style="border-style:dashed;">
+      <h2 style="color:var(--green-bright);">+ Add experience</h2>
+      <form method="post" action="/admin/experience">
+        <div class="grid2">
+          <div class="field"><label>Role</label><input name="role" required></div>
+          <div class="field"><label>Organisation</label><input name="org"></div>
+        </div>
+        <div class="field"><label>Description</label><textarea name="description"></textarea></div>
+        <div class="grid3">
+          <div class="field"><label>Period</label><input name="period" placeholder="2024 — now"></div>
+          <div class="field"><label>Track</label><%- trackSelect('security', ['security','fullstack','other']) %></div>
+          <div class="actions">
+            <input type="number" name="sort_order" value="0" title="Order" style="width:70px;">
+            <button class="btn btn-solid">Add experience</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ LEARNING PATHS ============ -->
+  <section class="sec" id="paths">
+    <h1>Learning paths</h1>
+    <p class="sec-desc">Shown in the <code>// htb academy</code> section. Set an overall % for the path and a % for each module — visitors see a progress bar for the path and one per module.</p>
+    <% data.paths.forEach(function(p){ %>
+      <div class="card">
+        <form method="post" action="/admin/paths/<%= p.id %>">
+          <div class="item-head"><span class="code"><%= p.name || '—' %></span><span class="pill">#<%= p.id %></span></div>
+          <div class="grid2">
+            <div class="field"><label>Path name</label><input name="name" value="<%= p.name %>"></div>
+            <div class="field"><label>Tag</label><input name="tag" value="<%= p.tag %>" placeholder="Job Role Path"></div>
+          </div>
+          <div class="grid3">
+            <div class="field"><label>Difficulty</label><input name="difficulty" value="<%= p.difficulty %>" placeholder="Easy"></div>
+            <div class="field"><label>Modules total</label><input name="modules_total" value="<%= p.modules_total %>" placeholder="20"></div>
+            <div class="field"><label>Duration</label><input name="hours" value="<%= p.hours %>" placeholder="17d 3h"></div>
+          </div>
+          <div class="grid3">
+            <div class="field"><label>Overall progress %</label><input type="number" step="0.1" min="0" max="100" name="progress" value="<%= p.progress %>"></div>
+            <div class="field"><label>Order</label><input type="number" name="sort_order" value="<%= p.sort_order %>"></div>
+            <div class="actions">
+              <button class="btn btn-solid">Save path</button>
+              <button class="btn btn-danger" formaction="/admin/paths/<%= p.id %>/delete" onclick="return confirm('Delete this path and all its modules?')">Delete</button>
+            </div>
+          </div>
+          <div class="field"><label>Path URL (optional)</label><input name="url" value="<%= p.url %>" placeholder="https://academy.hackthebox.com/path/..."></div>
+        </form>
+
+        <div style="border-top:1px solid var(--line); margin-top:16px; padding-top:16px;">
+          <p class="subhead" style="color:var(--muted);">Modules / sections</p>
+          <% p.modules.forEach(function(m){ %>
+            <form method="post" action="/admin/path_modules/<%= m.id %>" class="item">
+              <input type="hidden" name="path_id" value="<%= p.id %>">
+              <div class="grid3">
+                <div class="field"><label>Module name</label><input name="name" value="<%= m.name %>"></div>
+                <div class="field"><label>Status</label><input name="status" value="<%= m.status %>" placeholder="In progress"></div>
+                <div class="field"><label>Progress %</label><input type="number" step="0.1" min="0" max="100" name="progress" value="<%= m.progress %>"></div>
+              </div>
+              <div class="actions">
+                <input type="number" name="sort_order" value="<%= m.sort_order %>" title="Order" style="width:70px;">
+                <button class="btn btn-solid">Save</button>
+                <button class="btn btn-danger" formaction="/admin/path_modules/<%= m.id %>/delete" onclick="return confirm('Delete this module?')">Delete</button>
+              </div>
+            </form>
+          <% }); %>
+          <form method="post" action="/admin/path_modules" class="item" style="border-style:dashed;">
+            <input type="hidden" name="path_id" value="<%= p.id %>">
+            <div class="grid3">
+              <div class="field"><label>New module name</label><input name="name" required></div>
+              <div class="field"><label>Status</label><input name="status" placeholder="In progress"></div>
+              <div class="field"><label>Progress %</label><input type="number" step="0.1" min="0" max="100" name="progress" value="0"></div>
+            </div>
+            <div class="actions">
+              <input type="number" name="sort_order" value="0" title="Order" style="width:70px;">
+              <button class="btn btn-solid">+ Add module</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    <% }); %>
+
+    <div class="card" style="border-style:dashed;">
+      <h2 style="color:var(--green-bright);">+ Add path</h2>
+      <form method="post" action="/admin/paths">
+        <div class="grid2">
+          <div class="field"><label>Path name</label><input name="name" required placeholder="Junior Cybersecurity Analyst"></div>
+          <div class="field"><label>Tag</label><input name="tag" placeholder="Job Role Path"></div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>Difficulty</label><input name="difficulty" placeholder="Easy"></div>
+          <div class="field"><label>Modules total</label><input name="modules_total" placeholder="20"></div>
+          <div class="field"><label>Duration</label><input name="hours" placeholder="17d 3h"></div>
+        </div>
+        <div class="grid3">
+          <div class="field"><label>Overall progress %</label><input type="number" step="0.1" min="0" max="100" name="progress" value="0"></div>
+          <div class="field"><label>Order</label><input type="number" name="sort_order" value="0"></div>
+          <div class="actions"><button class="btn btn-solid">Add path</button></div>
+        </div>
+        <div class="field"><label>Path URL (optional)</label><input name="url" placeholder="https://academy.hackthebox.com/path/..."></div>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ HTB ============ -->
+  <section class="sec" id="htb">
+    <h1>Hack The Box</h1>
+    <p class="sec-desc">Live-synced from HTB using an API token. The section shows on the site only while a token is configured.</p>
+    <div class="card">
+      <p class="muted" style="margin-top:0;">
+        Sync status:
+        <% if (htbConfigured && !htbEnabled) { %>
+          <span style="color:var(--muted);">hidden</span> — token is set but the Labs section is off (<code>HTB_ENABLED=false</code>). Set it to <code>true</code> and restart to show it.
+        <% } else if (htbConfigured) { %>
+          <span style="color:var(--green);">configured</span> — pulling live from your HTB profile (cached ~15 min).
+        <% } else { %>
+          <span style="color:var(--muted);">not configured</span> — add <code>HTB_TOKEN</code> to your <code>.env</code> and restart.
+        <% } %>
+      </p>
+      <p class="muted" style="font-size:13px;">
+        Create a token at <strong>HTB → Profile → App Tokens</strong>, then in <code>.env</code>:
+        <code>HTB_TOKEN=…</code> (optionally <code>HTB_USER_ID=…</code>). Edit the section's intro text under
+        <a href="#content">content</a>.
+      </p>
+      <% if (htbConfigured) { %>
+      <form method="post" action="/admin/htb/refresh">
+        <button class="btn btn-ghost">Refresh HTB cache now</button>
+      </form>
+      <% } %>
+    </div>
+  </section>
+
+  <div style="height:60px;"></div>
+</div>
+
+</body>
+</html>
